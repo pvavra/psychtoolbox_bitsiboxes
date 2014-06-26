@@ -1,0 +1,2 @@
+close(bitsiboxScanner);
+close(bitsiboxButtons);
