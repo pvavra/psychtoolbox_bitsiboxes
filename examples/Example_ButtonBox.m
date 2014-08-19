@@ -55,27 +55,42 @@ switch response
     % do something when button "A" was pressed (index finger on right hand)
     case ButtonA
         text = 'You pressed button A!';
-     
-    % do something different for several different responses
+        
+        % do something different for several different responses
     case {ButtonB, ButtonC, ButtonD, ButtonE, ButtonF, ButtonG, ButtonH}
         text = 'You pressed some button...';
         
-    % do something unique if no button presed on time
+        % do something unique if no button presed on time
     case 0
         text = 'You did not press a button on time..';
         
-    % throw an error if an unkown response code is received
-    % note: this should never happen on a scanner, but can happen easily
-    % when running via keyboard (by pressing a key which is not associated
-    % with a label 'ButtonA',...,'ButtonH'. 
+        % throw an error if an unkown response code is received
+        % note: this should never happen on a scanner, but can happen easily
+        % when running via keyboard (by pressing a key which is not associated
+        % with a label 'ButtonA',...,'ButtonH'.
     otherwise
         sca; % close psychtoolbox - just to avoid getting stuck in PTB
-        close_bitsi; 
+        close_bitsi;
         error(['Error - response unknown! response received: ' num2str(response)]);
 end
 % and draw text on screen:
 DrawFormattedText(window, text, 'center', 'center',255)
-[VBLTimestamp lastFlipTimestamp FlipTimestamp Missed]=Screen('Flip', window);                
+[VBLTimestamp lastFlipTimestamp FlipTimestamp Missed]=Screen('Flip', window);
+WaitSecs(1);
+
+%%%%% wait for a specific response
+% check every millisecond for key being pressed -- only if
+% timeout not reached yet
+correctresponse = 0;
+while (correctresponse == 0) && ((GetSecs - lastFlipTimestamp )<= wait_time)
+    [response, keyDownTimestamp] = bitsiboxButtons.getResponse(0.001, true);
+    if (response == ButtonA) || (response == ButtonB)
+        correctresponse = 1;
+    end
+end
+text = 'You pressed the correect button!';
+DrawFormattedText(window, text, 'center', 'center',255)
+[VBLTimestamp lastFlipTimestamp FlipTimestamp Missed]=Screen('Flip', window);
 WaitSecs(1);
 
 % release bitsi-boxes this needs to be done, especially on Linux, where you

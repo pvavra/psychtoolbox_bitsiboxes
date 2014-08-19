@@ -21,12 +21,15 @@ bitsiScanner.clearResponses();
 
 nEvents = 0;
 
+message_waiting = 'Waiting for Scanner';
+
+
 % get PTB-window pointer
 if PTB
     windowpointers=Screen('Windows');
     window = windowpointers(1);
-    Screen('DrawText',window, 'Waiting for Scanner', 500, 250, 255); 
-    Screen('DrawText',window, int2str(nScans-nEvents), 570, 300, 255);
+    DrawFormattedText(window, message_waiting, 'center', 250, 255);
+    DrawFormattedText(window,int2str(nScans-nEvents), 'center', 300, 255);
     Screen(window,'Flip');
 end
 
@@ -44,9 +47,9 @@ while nEvents < nScans;
         
         % show countdown on screen
         if PTB
-            Screen('DrawText',window, 'Waiting for Scanner', 500, 250, 255); 
+            DrawFormattedText(window, message_waiting, 'center', 250, 255);
             if nScans-nEvents > 0 % don't show zero
-                Screen('DrawText',window, int2str(nScans-nEvents), 570, 300, 255);
+                DrawFormattedText(window,int2str(nScans-nEvents), 'center', 300, 255);
             end
             Screen(window,'Flip');
         end
