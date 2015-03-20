@@ -220,7 +220,7 @@ classdef Bitsi
                         response = fread(B.serobj, 1);
                         %added by Diego Lozano 26-May-2012 09:50:45
                         B.sendTrigger(response);
-                        fprintf('Bitsi: response code %i\n', response);
+                        fprintf('Bitsi: response code %i\n', response); %prints response to command line - JvB
                     end
                 end
                 
@@ -233,6 +233,16 @@ classdef Bitsi
                 % clearResponses call here, I think this can get you into
                 % trouble in certain cases. Just make sure you call
                 % clearResponses yourself when needed.
+                
+                % == Notes added by Jeroen van Baar on 20-Mar-2015 11:40 ==
+                % Note that fread takes the response out of the buffer. This can have unintuitive effects.
+                % Suppose your participant presses a button and releases it straight away. Two responses are 
+                % added to the buffer: button_down and button_up. getResponse() calls fread which takes the 
+                % first response out of the buffer: button_down. Button_up is still in there! So the next time
+                % you call getResponse(), it will immediately return with button_up. This is why it is necessary
+                % to call clearResponses() at strategic times. Also, remember that you can't get a response back
+                % once it's out of the buffer, unless you store it in a variable (as happens up here: the
+                % response is stored in the variable 'response').
                 
             end
         end
